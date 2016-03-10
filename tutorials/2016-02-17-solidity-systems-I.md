@@ -1,4 +1,4 @@
-# Updating Solidity 1 - Contract basics
+# Solidity Systems I - The basics
 
 This is a new tutorial series about how to create modular systems of smart-contracts, and how to replace contracts in a reliable way. This, along with some other life-cycle management, is mostly what this DAO framework does.
  
@@ -18,7 +18,7 @@ The first thing that must be checked, though, is that updating is even possible 
 
 A very important property of Etheruem contracts is that when a contract has been uploaded to the chain, the code can never be changed. Contracts are stored in special account objects that hold references to the contract (byte) code, and a database, and some other things. The database is a key-value store, also known as 'storage', and that's where data such as the values of contract fields are stored.
 
-![ExtVsContractAccount](../images/ext-vs-contract-account.png)
+![ExtVsContractAccount](./images/ext-vs-contract-account.png)
 
 When contracts are uploaded to the chain, the first thing that happens is that a new account is created. The contract code is then loaded into a VM which runs the constructor part, initializes fields etc., and then adds the runtime portion (or body) of the contract to the account. After the account has been created there is no way to change the code, and there is no way to update the database except through that code.
 
@@ -183,10 +183,6 @@ Proper delegation is an important part of smart-contract systems, because it mea
 - The more contracts that are in the system the harder they become to manage, and a strategy that makes a small system work may not be suitable for a medium-sized or large one.
 
 - Modularity comes with a cost, because it requires more code, storage variables and calls. On the public chain, where the gas limitations are quite severe (for obvious reasons), even a small modular system could be hard to deploy and run. Generally, when it comes to scalability vs. efficiency I tend to go with scalability. The large, expensive contracts in an excessively modular system can after all be improved and replaced, but if the contracts are locked down that may not be an option.
-
-### Next tutorial
-
-The next tutorial will be about how the external components can be set up so as to make the updating process safe. This will include contract code compilation, testing, and how to get contracts onto the chain using web3.js - the official Ethereum javascript API.
 
 
 Happy smart-contracting! 
