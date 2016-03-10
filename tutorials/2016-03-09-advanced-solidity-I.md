@@ -52,7 +52,7 @@ contract C {
 
 After pasting in the code, you should see the contract listed to the right:
 
-![AdvSolCContract](./images/adv-sol-C-contract.png)
+![AdvSolCContract](../images/adv-sol-C-contract.png)
 
 Clicking on `toggle details` will show the more advanced contract data, such as the runtime bytecode, function signatures and EVM assembly. Before looking at all the different fields in detail, we will first go over the anatomy of an Ethereum contract.
 

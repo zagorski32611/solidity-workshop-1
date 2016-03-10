@@ -18,7 +18,7 @@ The first thing that must be checked, though, is that updating is even possible 
 
 A very important property of Etheruem contracts is that when a contract has been uploaded to the chain, the code can never be changed. Contracts are stored in special account objects that hold references to the contract (byte) code, and a database, and some other things. The database is a key-value store, also known as 'storage', and that's where data such as the values of contract fields are stored.
 
-![ExtVsContractAccount](./images/ext-vs-contract-account.png)
+![ExtVsContractAccount](../images/ext-vs-contract-account.png)
 
 When contracts are uploaded to the chain, the first thing that happens is that a new account is created. The contract code is then loaded into a VM which runs the constructor part, initializes fields etc., and then adds the runtime portion (or body) of the contract to the account. After the account has been created there is no way to change the code, and there is no way to update the database except through that code.
 
