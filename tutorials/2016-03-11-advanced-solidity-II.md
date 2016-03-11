@@ -4,9 +4,9 @@ This post is about The different places where data can be located, how it works 
 
 ### Stack-machines
 
-The Ethereum VM is stack-based. This means the operands for the instructions are taken from the stack, and it is where the results of instructions are put.
+The Ethereum VM is stack-based. This means the operands for the instructions are taken from the stack, and it is also where the results are added.
 
-Here is a very simple example of how adding 5 and 10 would work. Assume there is a `PUSH` instruction that adds an integer to the stack, and an `ADD` instruction that pops the topmost two items on the stack, adds them, and puts the sum back on top of the stack. This is how adding would look:
+Here is a very simple example of how adding 5 and 10 would work in a stack machine. Assume there is a `PUSH` instruction that adds an integer to the stack, and an `ADD` instruction that pops the topmost two items on the stack, adds them, and puts the sum back on top of the stack. This is how adding would look:
 
 ```
 0: PUSH 5       Stack: [ 5 ] 
