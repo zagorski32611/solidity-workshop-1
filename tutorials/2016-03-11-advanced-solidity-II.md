@@ -41,9 +41,9 @@ There are other ways of doing it as well, for example we could push all three nu
 
 2: PUSH 20      Stack: [ 5, 10, 20 ]
 
-2: ADD          Stack: [ 5, 30 ]
+3: ADD          Stack: [ 5, 30 ]
 
-3: ADD          Stack: [ 35 ]
+4: ADD          Stack: [ 35 ]
 ```
 
 The data will also have to come from somewhere. The way it could be done is by giving each instruction a byte-code, i.e. a number from 0 to 255. By doing so, we can pass instructions and input values in a simple byte array. We can use these rules:

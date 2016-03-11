@@ -431,6 +431,6 @@ Finally, notice that the execution of `f` only involves pushing `0x18` (tag 1) t
 
 ### Coming posts
 
-In the coming posts I will go into more details about the Ethereum ABI, types, calldata, memory and storage. This is necessary to know in order to write assembly code. The first thing I'm going to do though is to make a cheat-sheet on VM instructions, that are a bit easier to read and understand then the table in the yellow paper.
+In the coming posts I will go into more details about the Ethereum ABI, types, calldata, memory and storage. This is necessary to know in order to write assembly code.
   
 Happy Smart-contracting! 
