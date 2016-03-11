@@ -1,6 +1,6 @@
 # Advanced Solidity II - EVM Stack and Assembler
 
-This post is about The different places where data can be located, how it works in Solidity, and what the assembly for these type of operations look.
+This post is about how to write basic assembly code for the EVM. It shows how to manually work with the stack and do some basic flow-control. There is also some info about the bytecode format, and how to manually turn assembly code into bytecode.
 
 ### Stack-machines
 
