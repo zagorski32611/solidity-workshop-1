@@ -15,7 +15,9 @@ This is a resource for Solidity and Ethereum smart-contract programming. Current
 
 ## Advanced Solidity Tutorial
 
-[Advanced Solidity I](https://github.com/androlo/solidity-workshop/blob/master/tutorials/2016-03-09-advanced-solidity-I.md)
+[Advanced Solidity I - Introduction](https://github.com/androlo/solidity-workshop/blob/master/tutorials/2016-03-09-advanced-solidity-I.md)
+
+[Advanced Solidity II - EVM Stack and Assembler](https://github.com/androlo/solidity-workshop/blob/master/tutorials/2016-03-11-advanced-solidity-II.md)
 
 ## Resources
 
