@@ -6,6 +6,7 @@ This is a resource for Solidity and Ethereum smart-contract programming. Current
 
 - [Solidity Systems Tutorial](#solidity-systems-tutorial)
 - [Advanced Solidity Tutorial](#advanced-solidity-tutorial)
+- [Examples](#examples)
 - [Resources](#resources)
 - [External Resources](#external-resources)
 
@@ -25,6 +26,12 @@ This is a resource for Solidity and Ethereum smart-contract programming. Current
 
 [Introduction](https://www.youtube.com/watch?v=GylBxjsytDk)
 
+## Examples
+
+[Add](https://github.com/androlo/solidity-workshop/blob/master/examples/Add.md) - A simple contract for adding two integers using `ADD`.
+
+[Loop](https://github.com/androlo/solidity-workshop/blob/master/examples/Loop.md) - A simple contract that uses conditional jump (`JUMPI`) to do a for-loop.
+    
 ## Resources
 
 [DAO-framework](https://github.com/smartcontractproduction/dao) - Example code for a DAO framework. Well documented.
