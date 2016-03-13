@@ -22,6 +22,8 @@ This is a resource for Solidity and Ethereum smart-contract programming. Current
 
 [Advanced Solidity III - Memory and Calldata](https://github.com/androlo/solidity-workshop/blob/master/tutorials/2016-03-11-advanced-solidity-III.md)
 
+[Advanced Solidity IV - Storage](https://github.com/androlo/solidity-workshop/blob/master/tutorials/2016-03-11-advanced-solidity-IV.md)
+
 #### Video
 
 [Introduction](https://www.youtube.com/watch?v=GylBxjsytDk)
