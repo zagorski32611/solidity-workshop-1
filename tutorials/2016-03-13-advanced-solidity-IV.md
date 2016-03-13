@@ -126,7 +126,7 @@ Next we add another field.
 ```
 contract C {
     uint x = 1;
-    address a = msg.sender;
+    int y = 6;
 }
 ```
 
