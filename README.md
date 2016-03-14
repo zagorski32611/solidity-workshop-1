@@ -24,6 +24,8 @@ This is a resource for Solidity and Ethereum smart-contract programming. Current
 
 [Advanced Solidity IV - Storage](https://github.com/androlo/solidity-workshop/blob/master/tutorials/2016-03-13-advanced-solidity-IV.md)
 
+[Advanced Solidity V - Solidity value-types](https://github.com/androlo/solidity-workshop/blob/master/tutorials/2016-03-14-advanced-solidity-V.md)
+
 #### Video
 
 [Introduction](https://www.youtube.com/watch?v=GylBxjsytDk)
