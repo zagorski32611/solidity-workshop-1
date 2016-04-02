@@ -2,7 +2,7 @@
 
 In this post I will show an example of how Solidity's new inline assembly can be used to create more efficient contracts. The example contract is very simple; it has two functions that can be called to check if two strings are equal.
 
-There two functions here do the same thing; the only difference is that one reads the strings directly from the transaction data, and the other works with them through their solidity variables. The first alternative is less idiomatic, but slightly more efficient.
+The two functions here do the same thing; the only difference is that one reads the strings directly from the transaction data, and the other works with them through their solidity variables. The first alternative is less idiomatic, but slightly more efficient.
 
 Here is the code:
 
@@ -10,6 +10,7 @@ Here is the code:
 contract StringUtilsAsm {
 
     // External reads strings directly from calldata (does not access strings a or b using the variables)
+    // In this case, 'a' and 'b' are basically just there to dictate how the input data is structured.
     function equalExt(string a, string b) constant external returns (bool) {
         assembly {
                 let res := 0
@@ -38,7 +39,7 @@ contract StringUtilsAsm {
         }
     }
 
-    // Reads strings after having been copied to memory (does not access strings a or b using the variables).
+    // Reads strings from memory ('a' and 'b' are pointers to memory).
     function equal(string a, string b) constant returns (bool) {
         assembly {
                 let res := 0
