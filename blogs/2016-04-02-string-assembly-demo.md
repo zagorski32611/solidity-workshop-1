@@ -178,7 +178,9 @@ StringUtilsAsmTester:
 StringUtilsAsmExtTester:
 ![EqualExtAsmTester](../images/EqualExtAsmTester.png)
 
-Note that much of the gas cost is for the call to the string utils contract (which is how it would normally be called). This is the cost when calling directly:
+Note that much of the gas cost is for calling the function from another contract, which is of course how it normally would be called (nobody would call a smart contract from Go or JavaScript only to compare strings).
+
+This is the cost when calling directly:
 
 ![EqualAsm](../images/EqualAsm.png)
 
@@ -258,4 +260,6 @@ Here is the results:
 
 Notice it is slightly more expensive for small strings, but balloons as the length of the string grows. In fact this could be an error in the gas estimation, because 60k is a bit over the top.
 
-Either way, the cost is higher, and the reason is extra instructions, and much of it is because it must check byte-for-byte rather then 32 bytes at a time. Removing one of the functions from the assembly contract will put it at about 150 bytes, while the normal Solidity contract is at about 300, and of course all those extra instructions will be used.
+Either way, the cost is higher, and the reason is extra instructions, and much of it is because it must check byte-for-byte rather then 32 bytes at a time - which will likely be changed, meaning the benefits seen will become smaller as solidity evolves.
+
+Finally, about the code-size: Removing one of the functions from the assembly contract will put it at about 150 bytes, while the normal Solidity contract is at about 300. This is a lot, but will of course be less when you can compare word by word in normal Solidity as well. It will be interesting to compare gas efficiency in functions where you have to compare byte-for-byte in both cases.
