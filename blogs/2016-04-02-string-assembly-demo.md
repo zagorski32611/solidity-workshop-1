@@ -14,7 +14,6 @@ contract StringUtilsAsm {
         assembly {
                 let res := 0
                 let lA := calldataload(0x44) // length of a
-                let words := add(div(lA, 32), gt(mod(lA, 32), 0)) // Total number of words. Basically: ceil(lengthOfA / 32)
                 let lBaddr := add(calldataload(0x24), 4) // Address in calldata where length of B is stored.
                 let lB := calldataload(lBaddr)
                 jumpi(tag_compare, eq(lA, lB)) // Compare byte-for-byte if length is equal, otherwise return false.
@@ -24,6 +23,7 @@ contract StringUtilsAsm {
             tag_compare:
                 {
                         let i := 0
+                        let words := add(div(lA, 32), gt(mod(lA, 32), 0)) // Total number of words. Basically: ceil(lengthOfA / 32)
                         let offsetA := 0x64 // Where in calldata the string 'a' begins.
                         let offsetB := add(lBaddr, 32) // And 'b'
                     tag_loop:
@@ -43,7 +43,6 @@ contract StringUtilsAsm {
         assembly {
                 let res := 0
                 let lA := mload(a)   // lA address is 0x60
-                let words := add(div(lA, 32), gt(mod(lA, 32), 0)) // Total number of words. Basically: ceil(lengthOfA / 32)
                 let lB := mload(b)
                 jumpi(tag_compare, eq(lA, lB))
             tag_finalize:
@@ -52,6 +51,7 @@ contract StringUtilsAsm {
             tag_compare:
                 {
                         let i := 0
+                        let words := add(div(lA, 32), gt(mod(lA, 32), 0)) // Total number of words. Basically: ceil(lengthOfA / 32)
                         let offsetA := add(a, 32)
                         let offsetB := add(b, 32)
                     tag_loop:
