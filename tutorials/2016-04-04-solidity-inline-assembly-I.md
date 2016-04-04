@@ -1,6 +1,6 @@
 # Solidity Inline Assembly I - Introduction
 
-This is the first post in a series on Solidity inline assembly. Inline assembly is contained within normal solidity code, but allows low-level access to the EVM. The focus here will be on some basic functions, and integration with regular Solidity code.
+This is the first post in a series on Solidity inline assembly. Inline assembly is contained within normal solidity code and allows low-level access to the EVM. This post is an introduction to the language, and has a number of code examples to demonstrate how it can be used.
 
 The [official guide](http://solidity.readthedocs.org/en/latest/control-structures.html#inline-assembly) is a good reference, and it will be referenced throughout the text.
 
@@ -22,13 +22,13 @@ contract Adder {
 
 What happens here is basically this:
 
-Before entering into the assembly block, it will push `a`, `b`, and `sum` onto the stack, as regular solidity variables. They are assigned their special stack position, which will remain throughout the block. When accessed, they will be either dup'ed or swap'ed, depending on if they are read, or assigned.
+Before entering into the assembly block, it will push `a`, `b`, and `sum` onto the stack, as regular solidity variables. They are assigned their special stack position which will remain throughout the block. When accessed, they will be either dup'ed or swap'ed depending on if they are read from or written to.
 
 In the assembly block, `b`, then `a` is copied and placed on top of the stack, the `ADD` instruction is run, and the `sum` variable is assigned that value.
 
-Finally it will load `sum` into memory, and pass that memory address and size to `RETURN`.
+Finally it will store `sum` in memory and pass the memory address and size to `RETURN`.
 
-We could manually return inside of the function, like this:
+We can manually return inside of the assembly block if we want, like this:
 
 ```
 contract Adder {
@@ -57,7 +57,7 @@ contract Adder {
 }
 ```
 
-What's happening here is we're pushing `b` to the stack, then `a`, then `add`, which is essentially `add(a, b)`. It pops the numbers and puts the sum on the stack. To assign the `sum` variable, we need to use the reversed equals symbol `=:`, because the instructions are evaluated from left to right.
+What's happening here is we're pushing `b` to the stack, then `a`, then `add`, which is essentially `add(a, b)`. It pops the numbers and puts the sum on the stack. To assign the value to the `sum` variable we need to use the reversed equals symbol `=:`, because the instructions are evaluated from left to right.
 
 It is possible to mix the two styles:
 
@@ -83,7 +83,7 @@ sum := add(s, s)
 
 #### Signed and unsigned integers.
 
-There are instructions specifically targetting signed integers. Here are two functions that does signed and unsigned integer division.
+Some instructions has special versions for working with signed integers. Here are two functions that does signed and unsigned integer division.
 
 ```
 contract SignedDivider {
@@ -103,17 +103,17 @@ contract UnsignedDivider {
 }
 ```
 
-Calling `UnsignedDivider.div(4, -2)` will return `0`, because `-2` is in two's complement, so is a huge number. Calling the signed division, on the other hand, will return `-2`.
+Calling `UnsignedDivider.div(4, -2)` will return `0`, because `-2` is in two's complement, so it's a huge number. Calling the signed division, on the other hand, will return `-2`.
 
 ### Stack, memory and storage variables.
 
-No matter what the assembly in a function does, it may need to access things like input parameters, storage variables, and other variables declared outside of the assembly block. Accessing variables is done differently, depending on their type.
+No matter what the assembly in a function does, it may need to access things like function parameters, storage variables, or temporary variables declared outside of the assembly block. Accessing variables is done differently, depending on their type.
 
 ##### Stack variables
 
-Variables that are elementary non-array, non-mapping types, is created directly on the stack. This would be addresses, numbers, booleans and fixed-size `byteX` types.
+Variables that are elementary, non-array, non-mapping types are created directly on the stack. This would be addresses, numbers, booleans and fixed-size `byteX` types.
 
-All function params of these types will be put on the stack - both input and output params. They can also be created in function code, outside of the assembly, like normal. Additinally, they can also be declared within assembly code using `let`.
+All function parameters of these types will be put on the stack - both input and output parameters. They can also be created in function code, outside of the assembly, like normal. Additionally, they can also be declared within assembly code using `let`.
 
 ```
 contract C {
@@ -134,9 +134,33 @@ contract C {
 
 When reading a stack-declared variable, it will generally be `dup`ed, and writing means it will be `swap`ed. No memory is involved.
 
+`let` is different from normal variable declarations in that they are only allowed to be one word in size, and have a different scope. In assembly you can use braces to create new scopes, like so:
+
+```
+contract C {
+    function f() constant returns (uint ret) {
+        // 'ret' will remain until function has returned.
+        assembly {
+            let x := 0 // Creates a stack item, keeps track on its index.
+            let y := 5 // Same
+            {
+                let z := 17     // Creates another stack item.
+                let y := 8      // local y overrides.
+                x := add(y, z)  // 8 + 17
+            }
+            // z and nested y gone. Stack items popped.
+            // y := z not possible
+            ret := mul(x, y) // 25*5
+        }
+        // x and y both gone, stack items popped.
+        return;
+    }
+}
+```
+
 ##### Memory and storage variables.
 
-Variables that are stored in memory or storage can be accessed through pointers.
+Variables that are stored in memory or storage are pointers, and must be dereferenced using either `mload` or `sload` depending on the reference type.
 
 ```
 contract C {
