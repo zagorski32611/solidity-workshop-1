@@ -1,4 +1,4 @@
-# Solidity Systems I - The basics
+# Solidity Inline Assembly I - Introduction
 
 This is the first post in a series on Solidity inline assembly. Inline assembly is contained within normal solidity code, but allows low-level access to the EVM. The focus here will be on some basic functions, and integration with regular Solidity code.
 
