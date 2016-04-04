@@ -141,7 +141,7 @@ contract C {
     function f() constant returns (uint ret) {
         // 'ret' will remain until function has returned.
         assembly {
-            let x := 0 // Creates a stack item, keeps track on its index.
+            let x := 0 // Creates a stack item, keeps track of its index.
             let y := 5 // Same
             {
                 let z := 17     // Creates another stack item.
@@ -223,8 +223,8 @@ contract C {
     function f() constant returns (uint, uint) {
         assembly {
             let s0 := sload(0x0) // Load storage address 0x0
-            let a := mod(s0, 0x1000000000000000) // Get first 8 bytes
-            let b := mod(div(s0, 0x1000000000000000), 0x1000000000000000) // Shift and get.
+            let a := and(s0, 0xfffffffffffffff) // Get first 8 bytes
+            let b := div(and(s0, 0xfffffffffffffff0000000000000000), 0x10000000000000000) // Get next 8 bytes
             mstore(0x60, a)     // Store a
             mstore(0x80, b)     // Store b
             return(0x60, 64)    // Return 64 bytes, starting at 0x60
@@ -252,13 +252,13 @@ contract C {
 }
 ```
 
-As pointed out in the section on stack variables, normal stack variables will automatically be copied onto the stack, and can both be read from and written to.
+As pointed out in the section on stack variables, value type parameters will always be copied onto the stack, and can both be read from and written to.
 
 ```
 contract C {
     function f(uint a) constant returns (bool stackSame, bool txDataSame) {
-        // We can work with 'a' in two ways - either through the
-        // variable or by reading from calldata.
+        // We can work with 'a' in three ways - the variable, the stack
+        // item, or read from calldata.
         assembly {
             let aFromStack := 0
             // Stack: [..., a, stackSame, txDataSame, aFromStack]
@@ -392,5 +392,11 @@ This is how it flows:
 
 There is really only two possible paths: It can either go directly from start to finish without passing S2, or it can execute the code in S2 a number of times before moving on from S1 to S3. If values are added or removed from the stack at S2, we could eventually get to S1 with a different stack then when we got there directly from S0, which could mean that the wrong values are used.
 
-As an example, imagine making a mistake and pushing the updated `index` on top of the existing `index` at the end of S2, rather then replacing it. When entering S1 from S0 for the first time, everything will be fine, and the stack will be `[ ... , a, b, prod, index]`. When entering it from jumping at the end of S2, the stack will be: `[ ... , a, b, prod, index, (index + 1)]`. When computing, it expects index to get `index` and `b`, but it would instead get `index + 1` and `prod`.
+As an example, imagine making a mistake and pushing the updated `index` on top of the existing `index` at the end of S2, rather then replacing it. When entering S1 from S0 for the first time, everything will be fine, and the stack will be `[ ... , a, b, prod, index]`. When entering it from jumping at the end of S2, the stack will be: `[ ... , a, b, prod, index, (index + 1)]`. The equals comparison expects `index` and `b`, but it would instead get `index + 1` and `prod`.
+
+Errors like these are dangerous, and this must be kept in mind when writing code, but it can generally be avoided by making use of language features like variables and scoping instead of manipulating the stack manually.
+
+### Coming up
+
+The next part will probably be about more advanced operations, such as calling other contracts.
 
