@@ -12,11 +12,14 @@ contract StringUtilsAsm {
     // External reads strings directly from calldata (does not access strings a or b using the variables)
     // In this case, 'a' and 'b' are basically just there to dictate how the input data is structured.
     function equalExt(string a, string b) constant external returns (bool) {
+        uint lA;
+        uint posA;
+        uint lB;
+        uint posB;
         assembly {
                 let res := 0
-                let lA := calldataload(0x44) // length of a
-                let lBaddr := add(calldataload(0x24), 4) // Address in calldata where length of B is stored.
-                let lB := calldataload(lBaddr)
+                a =: lA =: posA
+                b =: lB =: posB
                 jumpi(tag_compare, eq(lA, lB)) // Compare byte-for-byte if length is equal, otherwise return false.
             tag_finalize:
                 mstore(0x0, res)
@@ -25,13 +28,11 @@ contract StringUtilsAsm {
                 {
                         let i := 0
                         let words := add(div(lA, 32), gt(mod(lA, 32), 0)) // Total number of words. Basically: ceil(lengthOfA / 32)
-                        let offsetA := 0x64 // Where in calldata the string 'a' begins.
-                        let offsetB := add(lBaddr, 32) // And 'b'
                     tag_loop:
                         {
                             let offset := mul(i, 32)
                             i := add(i, 1)
-                            res := eq(calldataload(add(offsetA, offset)), calldataload(add(offsetB, offset)))
+                            res := eq(calldataload(add(posA, offset)), calldataload(add(posB, offset)))
                         }
                         jumpi(tag_loop, and(lt(i, words), res) ) // Continue to loop when string-segments are equal, and 'i < words'
                 }

@@ -158,7 +158,7 @@ contract C {
 }
 ```
 
-##### Memory and storage variables.
+##### Memory variables.
 
 Variables that are stored in memory or storage are pointers, and must be dereferenced using either `mload` or `sload` depending on the reference type.
 
@@ -197,17 +197,19 @@ contract C {
 }
 ```
 
-Storage variables can be more difficult to work with, especially arrays, since they may be packed. It seem to be issues when using storage variables in assembly, but it is possible to access them directly using `sload`.
+### Storage Variables
+
+Storage variables can be more difficult to work with, especially arrays, since they may be packed. It is possible to reference storage variables from inline assembly, but doing so will push 2 items onto the stack - location and offset, so it must be done with care.
 
 ```
 contract C {
-    uint _a = 0x55; // Stored at storage-address 0x0
+    uint _a = 55; // Stored at storage-address 0x0
 
-    function f() constant returns (uint) {
-
+    function f() constant returns (uint a) {
         assembly {
-            mstore(0x0, sload(0x0))
-            return(0x0, 32)
+            _a  // Adds 'address to _a', which is 0x0, then 'offset of _a', which is 0.
+            pop // Remove offset.
+            sload =: a
         }
     }
 }
@@ -217,17 +219,52 @@ Packed storage data:
 
 ```
 contract C {
-    uint64 _a = 0x55; // Stored at storage-address 0x0
+    uint64 _a = 0x55;
     uint64 _b = 0x66;
 
-    function f() constant returns (uint, uint) {
+    function f() constant returns (uint a, uint b) {
+        uint s0;
+        uint bOfs;
+        assembly {
+            _a pop // Pop the offset
+            sload =: s0 // Store the address in s0
+            a:= and(s0, 0xfffffffffffffff) // Value of '_a' is in the first 64 bits.
+            _b =: bOfs pop // now keep offset in 'bOfs' and pop address (already know it's the same as for '_a')
+            let bFact := exp(256, bOfs) // Factor for offsetting
+            b := div(and(s0, mul(0xfffffffffffffff, bFact)), bFact) // Extract '_b'
+        }
+    }
+}
+```
+
+Note that `sload(x)` isn't possible here since it puts two item on the stack, which is why the instructional style is mixed in.
+
+It is also possible to access them directly using `sload`.
+
+```
+contract C {
+    uint _a = 0x55; // Stored at storage-address 0x0
+
+    function f() constant returns (uint a) {
+        assembly {
+            a := sload(0x0)
+        }
+    }
+}
+```
+
+Packed storage data:
+
+```
+contract C {
+    uint64 _a = 0x55; // Both are stored at storage-address 0x0
+    uint64 _b = 0x66;
+
+    function f() constant returns (uint a, uint b) {
         assembly {
             let s0 := sload(0x0) // Load storage address 0x0
-            let a := and(s0, 0xfffffffffffffff) // Get first 8 bytes
-            let b := div(and(s0, 0xfffffffffffffff0000000000000000), 0x10000000000000000) // Get next 8 bytes
-            mstore(0x60, a)     // Store a
-            mstore(0x80, b)     // Store b
-            return(0x60, 64)    // Return 64 bytes, starting at 0x60
+            a := and(s0, 0xfffffffffffffff) // Get first 8 bytes
+            b := div(and(s0, 0xfffffffffffffff0000000000000000), 0x10000000000000000) // Get next 8 bytes
         }
     }
 }
@@ -247,6 +284,17 @@ contract C {
             let lenAddr := calldataload(4)
             // offset address by 4, read, assign to 'len'
             len := calldataload(add(lenAddr, 4))
+        }
+    }
+}
+```
+
+It is also possible to use the variables instead of calling `calldataload`. Something to remember is that two items will be added to the stack rather, position and length:
+
+contract C {
+    function f(uint[] arr) constant external returns (uint len) {
+        assembly {
+            arr =: len pop
         }
     }
 }
@@ -291,19 +339,16 @@ contract C {
 Try adding `external` to the function and the assignment will fail (you will even get a compiler error saying that 'arr[0]' isn't an LValue).
 
 Internal functions does not use calldata. It copies value-types like normal, and reference types as pointers to storage or memory.
-
 ```
 contract C {
     function f(uint[] arr) constant returns (uint) {
         return _g();
     }
 
-    function _g() constant internal returns (uint) {
-        uint x;
+    function _g() constant internal returns (uint x) {
         assembly {
             x := calldataload(4) // Will read the '0x20' from array call-data every time, even though `_g` has no params.
         }
-        return x;
     }
 }
 ```
@@ -399,4 +444,3 @@ Errors like these are dangerous, and this must be kept in mind when writing code
 ### Coming up
 
 The next part will probably be about more advanced operations, such as calling other contracts.
-
