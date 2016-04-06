@@ -9,8 +9,7 @@ Here is the code:
 ```
 contract StringUtilsAsm {
 
-    // External reads strings directly from calldata (does not access strings a or b using the variables)
-    // In this case, 'a' and 'b' are basically just there to dictate how the input data is structured.
+    // External reads strings directly from calldata ('a' and 'b' are pointers to calldata).
     function equalExt(string a, string b) constant external returns (bool) {
         uint lA;
         uint posA;
