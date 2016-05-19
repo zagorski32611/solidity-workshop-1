@@ -26,7 +26,7 @@ contract StringUtilsAsm {
             tag_compare:
                 {
                         let i := 0
-                        let words := add(div(lA, 32), gt(mod(lA, 32), 0)) // Total number of words. Basically: ceil(lengthOfA / 32)
+                        let words := div(add(lA, 31), 32) // Total number of words. Basically: ceil(lengthOfA / 32)
                     tag_loop:
                         {
                             let offset := mul(i, 32)
@@ -52,7 +52,7 @@ contract StringUtilsAsm {
             tag_compare:
                 {
                         let i := 0
-                        let words := add(div(lA, 32), gt(mod(lA, 32), 0)) // Total number of words. Basically: ceil(lengthOfA / 32)
+                        let words := div(add(lA, 31), 32) // Total number of words. Basically: ceil(lengthOfA / 32)
                         let offsetA := add(a, 32)
                         let offsetB := add(b, 32)
                     tag_loop:
