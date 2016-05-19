@@ -9,7 +9,6 @@ This is a resource for Solidity and Ethereum smart-contract programming. Current
 - [Solidity Inline Assembly Tutorial](#solidity-inline-assembly-tutorial)
 - [Blog Posts](#blog-posts)
 - [Examples](#examples)
-- [Resources](#resources)
 - [External Resources](#external-resources)
 
 ## Solidity Systems Tutorial
