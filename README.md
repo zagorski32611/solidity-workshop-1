@@ -52,12 +52,6 @@ This is a resource for Solidity and Ethereum smart-contract programming. Current
 
 [IterableAddressSetFASM](https://github.com/androlo/solidity-workshop/blob/master/examples/IterableAddressSetFASM.sol) - An iterable `address` set written in functional-style inline assembly.
 
-## Resources
-
-[DAO-framework](https://github.com/smartcontractproduction/dao) - Example code for a DAO framework. Well documented.
-
-[solUnit](https://github.com/smartcontractproduction/sol-unit) - Unit-testing framework for Solidity.
-
 ## External resources
 
 Official Ethereum Page: https://ethereum-homestead.readthedocs.org/en/latest/
