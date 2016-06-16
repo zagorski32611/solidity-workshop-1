@@ -291,6 +291,7 @@ contract C {
 
 It is also possible to use the variables instead of calling `calldataload`. Something to remember is that two items will be added to the stack rather, position and length:
 
+```
 contract C {
     function f(uint[] arr) constant external returns (uint len) {
         assembly {
