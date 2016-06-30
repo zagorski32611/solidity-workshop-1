@@ -58,3 +58,5 @@ Official Ethereum Page: https://ethereum-homestead.readthedocs.org/en/latest/
 Official Solidity Page: http://solidity.readthedocs.org/en/latest/
 
 Ethereum SE: http://ethereum.stackexchange.com/
+
+Gavin Wood on condition-oriented programming: https://medium.com/@gavofyork/condition-orientated-programming-969f6ba0161a#.8dw7jp1gq
