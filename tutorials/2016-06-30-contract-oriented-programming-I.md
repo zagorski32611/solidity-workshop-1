@@ -1,6 +1,6 @@
 # Contract-oriented programming - part I
 
-This series is about [contract-oriented programming](https://en.wikipedia.org/wiki/Design_by_contract) and Solidity. "Contract" in this context is actually not an Ethereum contract, or a smart contract; it is the name used to describe functions or other units of functionality, such as components. The basic idea is that pre- and post-conditions are first class citizens and should be formally specified and baked into the interfaces themselves. In practice it means that functions needs to thought of as more then just a set of instructions, but are made up of the main "business logic" part, conditions that needs to be satisfied for the business logic to run, and conditions that must be met afterwards. In actual code, these conditions are usually enforced by assertions.
+This series is about [contract-oriented programming](https://en.wikipedia.org/wiki/Design_by_contract) and Solidity. "Contract" in this context is actually not an Ethereum contract, or a smart contract; it is the name used to describe interfaces for functions or other units of functionality. The basic idea is that pre- and post-conditions are first class citizens and should be formally specified and baked into the interfaces themselves.
 
 There is obviously more to it then this, and we will get into more specifics later, but for now we will start by looking at some basic features of Solidity functions and interfaces, and how contract oriented techniques can be applied.
 
