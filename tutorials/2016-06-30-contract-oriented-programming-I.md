@@ -4,15 +4,15 @@ This series is about [contract-oriented programming](https://en.wikipedia.org/wi
 
 There is obviously more to it then this, and we will get into more specifics later, but for now we will start by looking at some basic features of Solidity functions and interfaces, and how contract oriented techniques can be applied.
 
-### Interfaces in Solidity
+Despite being fairly simple, Solidity is not an easy language to write code in. There are contracts, libraries, functions, modifiers and events. Functions have lots of modifiers that must be chosen correctly, and it's not always obvious what some of them (such as `external` and `internal`) actually does. Certain modifiers are not yet enforced (for example `constant`), and also - even if you get all the modifiers right there are more issues still, for example that certain Solidity types cannot be used as in- or out-data in certain types of functions.
 
-Contract interfaces is one of the hardest things to get right in Solidity. There are contracts, libraries, functions, modifiers and events. Functions have lots of modifiers that must be chosen correctly, and it's not always obvious what some of them (such as `external` and `internal`) actually does. Certain modifiers are not yet enforced (for example `constant`), and also - even if you get all the modifiers right there are more issues still, for example that certain Solidity types cannot be used as in- or out-data in certain types of functions.
-
-That being said, it is actually not that bad when you get used to it, and it keeps getting better all the time. The issues I mention here are not caused by bad language design, but because certain features (whether they're language or EVM specific) just hasn't been added in yet. Still, I feel that some of it must be cleared out before going into the contract part.
+That being said, it is actually not that bad when you get used to it, and it keeps getting better all the time. The issues I mention here are not caused by bad language design, but because certain features (whether they're language or EVM specific) simply hasn't been added in yet. The language is still young. Still, I feel that some of it must be cleared out before going into the contract part.
 
 ### Functions and standard modifiers
 
-Modifiers are added to variables and functions to affect their behavior. All the basic modifiers can be found [here](https://en.wikipedia.org/wiki/Design_by_contract). Most of the common modifiers (like public and private) is available, but some behave a bit differently then one might expect. Before describing them in full i will have to go over `call` vs. `transaction` mechanics:
+Modifiers are added to variables and functions to affect their behavior. All the basic modifiers can be found [here](https://en.wikipedia.org/wiki/Design_by_contract). Most of the common modifiers (like public and private) is available, but some behave a bit differently then one might expect. 
+
+Before describing all the modifiers in full I will have to go over `call` vs. `transaction` mechanics:
 
 A `transaction` is a signed transaction sent by a user to a contract account, or external account, that changes (or at least tries to change) the world state. Transactions are placed in the tx queue and are not considered valid until they are eventually mined into a block. Transactions must always be used when sending Ether, or doing any form of **write** operation.
 
@@ -24,9 +24,9 @@ The `constant` modifier is not enforced by the Solidity compiler yet, but the pu
 
 #### `external` and `public`
 
-From a visibility perspective, `external` is essentially the same as `public`. When the contract containing a `public` or an `external` function is deployed, and the code is stored in an account, the function can be called both from other contracts and by targeting the contract address in a call or a transaction.
+From a visibility perspective, `external` is essentially the same as `public`. When a contract containing a `public` or an `external` function has been deployed, the function can be called from other contracts, calls, and transaction.
 
-The `external` modifier must not be confused with "external" as it's used in the white paper, i.e. "external accounts", which means accounts that are not contract accounts. `external` functions can be called from other contracts  as well as through transactions or calls.
+The `external` modifier must not be confused with "external" as it's used in the white paper, i.e. "external accounts", which means accounts that are not contract accounts. `external` functions can be called from other contracts as well as through transactions or calls.
 
 The main difference between `external` and `public` functions is the way they are called from the contract that contains them, and how the input parameters are handled. If you call a `public` function from another function in the same contract, the code will be executed using a `JUMP`, much like private and internal functions, whereas `external` functions must be invoked using the `CALL` instruction. Additionally, `external` functions does not copy the input data from the read-only calldata array into memory and/or stack variables, which can be used for optimization.
 
@@ -65,11 +65,11 @@ contract HelloVisibility {
 }
 ```
 
-The `hello` function can be called from other contracts, and can also be called from the contract itself, as demonstrated by the `helloLazy´ function, which simply calls to the `hello` function. The `helloQuiet` function can be called from other functions, as demonstrated by the `helloAgain` function, but it cannot be called from other contracts or through external transactions/calls.
+The `hello` function can be called from other contracts, and can also be called from the contract itself, as demonstrated by the `helloLazy` function, which simply calls to the `hello` function. The `helloQuiet` function can be called from other functions, as demonstrated by the `helloAgain` function, but it cannot be called from other contracts or through external transactions/calls.
 
-Notice that all functions are marked as `constant`, because neither of them changes the world state (i.e. sends Ether or modifies a variable in the contract, or calls other non constant functions).
+Notice that all functions are marked as `constant`, because none of them will change the world state.
 
-Try adding `external` to the `hello` function, and you will see that it now fails to compile. If `hello` has to be external for some reason, we could try and fix the code by changing the call inside `helloLazy` to `this.hello()`, although doing that will not work either! This is because of another issue I mentioned, which is that certain types (dynamically sized arrays in particular) can't be used as input or output in certain functions. I will get into that more later.
+Try adding `external` to the `hello` function, and you will see that the contract now fails to compile. If `hello` has to be external for some reason, we could try and fix the code by changing the call inside `helloLazy` to `this.hello()`, although doing that will not work either! This is because of another issue I mentioned, which is that certain types (dynamically sized arrays in particular) can't be used as input or output in certain functions.
 
 The next two contracts demonstrates the difference between private and internal.
 
@@ -90,13 +90,11 @@ contract Hello is HelloGenerator {
 }
 ```
 
-`Hello` extends `HelloGenerator` and uses its internal function to create the string. HelloGenerator has an empty JSON ABI, because it has no public functions. Try and change `internal` to `private` at `helloQuiet` and you will get a compiler error.
+`Hello` extends `HelloGenerator` and uses its internal function to create the string. `HelloGenerator` has an empty JSON ABI, because it has no public functions. Try and change `internal` to `private` at `helloQuiet` and you will get a compiler error.
 
 ### Custom modifiers
 
-The documentation on custom modifiers can be found [here](http://solidity.readthedocs.io/en/latest/contracts.html#function-modifiers). The main differences between (internal) functions and custom modifiers is that modifier code is automatically inlined, and that they are not added in the function body, but along with the other function modifiers.
-
-As an example of how modifiers can be utilized, here are three different ways to to the same guard to a function:
+The documentation on custom modifiers can be found [here](http://solidity.readthedocs.io/en/latest/contracts.html#function-modifiers). As an example of how modifiers can be utilized, here are three different ways to create the same function:
 
 ```
 contract GuardedFunctionExample1 {
@@ -146,21 +144,21 @@ contract GuardedFunctionExample3 {
 }
 ```
 
-Notice that the modifier does not appear in the JSON ABI; neither as an element of its own, or in the `guardedFunction` data.
+NOTE: The modifier does not actually appear anywhere in the JSON ABI.
 
 ### Condition-oriented Programming
 
-Looking at the previous section, one might ask "why complicate things using custom modifiers"? If I want to re-use the guard in different functions, normal decomposition would suffice (example 2). If I wanted to inline it, for added efficiency, I could just do that as well (example 1). This is true, but the modifier semantics is much better suited for something called condition-oriented programming. The basic idea behind COP, and its relation to contract-oriented programming is outlined in a new series of [blog posts](https://medium.com/@gavofyork/condition-orientated-programming-969f6ba0161a#.8dw7jp1gq) by Dr. Gavin Wood. It highlights a number of ugly side effects that mixing the (pre)conditions in a function with the "business logic" itself may have.
+Looking at the previous section, one might ask "why complicate things using custom modifiers"? If I want to re-use the guard in different functions, normal decomposition would suffice (example 2). If I wanted to inline it, for added efficiency, I could just do that as well (example 1). This is true, but the modifier semantics is much better suited for something called condition-oriented programming. The basic idea behind COP is outlined in a [blog post](https://medium.com/@gavofyork/condition-orientated-programming-969f6ba0161a#.8dw7jp1gq) by Dr. Gavin Wood. The blog post highlights a number of ugly side effects that mixing the (pre)conditions in a function with the "business logic" itself may have, and shows how COP can be used to fix that.
 
 *Potential bugs hide when the programmer believes a conditional (and thus the state it projects onto) means one thing when in fact it means something subtly different.*
 
-This is of course in reference to the code that caused "the DAO" to fail. It has been concluded that the reason why the contract was susceptible to so called reentrancy attacks was not because of bugs in the EVM, or the Solidity language itself, but a programming mistake that is very easy to make. The actual issue is described in [this blog post](https://eng.erisindustries.com/programming/2016/06/18/lessons-learned-dao/) by Solidity core developer RJ Catalano. Part of the problem was the ordering of of the pre-conditions, which made it possible to call the function multiple times before they had all been properly resolved.
+A good example of this is the code that caused "the DAO" to fail. It has been concluded that certain functions in the DAO contract was susceptible to so called reentrancy attacks, but this was not because of bugs in the EVM, or the Solidity language itself; it was because of a programming error that is very easy to make. More info about this weakness can be found in [this blog post](https://eng.erisindustries.com/programming/2016/06/18/lessons-learned-dao/) by core Solidity developer RJ Catalano.
 
-The blog post goes on to declare that *Essentially, COP uses pre-conditions as a first-class citizen in programming*, which is essentially what the custom modifiers in Solidity are, then proceeds to give a few simple examples of how they can be used to write COP Solidity.
+Gavin goes on to explain that *Essentially, COP uses pre-conditions as a first-class citizen in programming* - which is essentially what the custom modifiers in Solidity are - then proceeds to give a few simple examples of how they can be used to write COP Solidity code.
 
 #### COP applied
 
-This section contains a simple application of the techniques described in the blog post. The following contract is a variation of the simple token contract from the blog. We will start without modifiers.
+This section contains a simple application of the techniques described in the blog post. The following contract is a variation of the example token contract We will start without modifiers.
 
 ```
 contract Token
@@ -197,7 +195,7 @@ contract Token
 }
 ```
 
-This is not very hard to fix. The first thing we will do is to break out the guard from the `blacklist` function into a modifier and add that modifier to the function, giving us this:
+The first thing we will do is to break out the guard from the `blacklist` function into a modifier and add that modifier to the function, giving us this:
 
 ```
 modifier isOwner {
@@ -234,7 +232,7 @@ function transfer(uint _amount, address _dest) notBlacklisted atLeast(_amount) {
 }
 ```
 
-Notice the order of the modifiers are left-to-right, so in order to have the exact same order the blacklist check must come first. Also, the balance check was changed slightly, although we could just as well have created it like this:
+Notice the order of the modifiers are left-to-right, so in order to have the exact same order the blacklist check must come first. Also, the balance check was changed slightly, although we could just as well have made it like this:
 
 ```
 modifier atLeast(uint x) {
@@ -295,7 +293,7 @@ contract COPToken
 
 #### Unit testing
 
-Now comes the interesting part: How do we make sure that these modifiers actually work? At this point, a few basic unit tests will have to do. We could just call the function with different params and check the results, but that is not particularly clean. Instead, we're going to use inheritance to create a contract with functions that are used to test a modifier, and separate functions for testing the modified function itself.
+Now comes the interesting part: How do we make sure that these modifiers actually work? At this point, a few basic unit tests will have to do. We could just call the function with different params and check the results, but that is not particularly clean. Instead, we're going to use inheritance to create a contract with functions that are used to test a modifier, and separate functions for testing the modified function itself. This contract that is tested here is even simpler then the previous one.
 
 ```
 contract Token
@@ -361,18 +359,18 @@ contract TokenTest is Token {
 }
 ```
 
-The first function in the test contract simply runs the modifier, then returns true if it passes the guard. This means the function will return `true` if the balance of the account is equal to or higher then the provided value, otherwise it returns false. Next, there are two simple functions to check if the modifier works as intended. Finally there are two functions to check that the body of the transfer function works as intended.
+The first function in the test contract simply runs the modifier and returns true if it passes. This means the function will return `true` if the balance of the caller is equal to or higher then the provided value, otherwise it returns false. Next, there are two simple functions to check if the modifier works as intended. Finally there are two functions to check that the body of the transfer function works as intended.
 
-This makes testing the transfer function easier. If for example the modifier tests are fine, but the transfer function does not work as intended, it is clearly something wrong with the transfer function, and conversely, if the modifier tests fail then we can't expect the transfer function to work properly until the modifier is fixed, and the more complexity there is, the more it will benefit from the clarity.
+This makes testing the transfer function easier. If the modifier tests passes but the transfer function does not, it is clearly something wrong with the transfer function. If the modifier tests fail then we can't expect the transfer function to work properly until the modifier is fixed.
 
 
 ### Complications
 
 The COP modifier approach does not come without issues.
 
-When using normal functions, without modifiers, it is possible to return an error code when something goes wrong. In the example contract, we would perhaps have wanted to return a different error code depending on whether the transfer was successful, if it failed because the caller was blacklisted, or if it failed because the callers balance was too low. This can be very useful when a function is expected to be called by other contracts. Modifiers are a bit heavy handed, as the only thing they can really do at this point is to throw, which terminates the VM and reverts all changes, or simply return, which returns the null value for every return param.
+When using normal functions, without modifiers, it is possible to return an error code when something goes wrong. In the example contract, we would perhaps have wanted to return a different error code depending on whether the transfer was successful, if it failed because the caller was blacklisted, or if it failed because the callers balance was too low. This can be very useful when a function is called by other contracts. Modifiers are a bit heavy handed in this respect because the only thing they can really do (at this point) is to throw, which terminates the VM and reverts all changes, or return, which returns the null value of all return params.
 
-Another issue is of course the classical problem when "things go formal" - code becomes much more difficult to write. An example would be a function that is made up of several nested conditionals, and each block contains a lot of logic. Gavin's example uses a vote rejection function that is called after the transfer logic (and its guards) has been run, but things can be a lot more complex; the vote function is called by default, and the custom modifier on that function takes no argument, but what if different functions should be called depending on whether or not the transaction was successful, and those in turn has similar conditions in them. It could get much more difficult to write that using proper COP.
+Another issue is of course the classical problem that arises when "things go formal" - code becomes much more difficult to write. An example would be a function that is made up of several nested conditionals, and each block contains a lot of logic. Gavin's example uses a vote rejection function that is called after the transfer logic (and its guards) has been run, but things can be a lot more complex; the vote function is called by default, and the custom modifier on that function takes no argument, but what if different functions should be called depending on whether or not the transaction was successful, and those in turn has similar conditions in them. It could get much more difficult to write that using proper COP.
 
 ### Conclusion
 
