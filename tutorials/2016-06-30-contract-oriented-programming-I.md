@@ -6,7 +6,7 @@ There is obviously more to it then this, and we will get into more specifics lat
 
 Despite being fairly simple, Solidity is not an easy language to write code in. There are contracts, libraries, functions, modifiers and events. Functions have lots of modifiers that must be chosen correctly, and it's not always obvious what some of them (such as `external` and `internal`) actually does. Certain modifiers are not yet enforced (for example `constant`), and also - even if you get all the modifiers right there are more issues still, for example that certain Solidity types cannot be used as in- or out-data in certain types of functions.
 
-That being said, it is actually not that bad when you get used to it, and it keeps getting better all the time. The issues I mention here are not caused by bad language design, but because certain features (whether they're language or EVM specific) simply hasn't been added in yet. The language is still young. Still, I feel that some of it must be cleared out before going into the contract part.
+That being said, it is actually not that bad when you get used to it, and it keeps getting better all the time. The issues I mention here are not caused by bad language design, but because certain features (whether they're language or EVM specific) simply hasn't been added in yet. The language is still young. Still, I feel that some of it must be cleared up before going into the contract part.
 
 ### Functions and standard modifiers
 
