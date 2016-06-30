@@ -5,6 +5,7 @@ This is a resource for Solidity and Ethereum smart-contract programming. Current
 ## Table of Content
 
 - [Solidity Systems Tutorial](#solidity-systems-tutorial)
+- [Contract-oriented Programming Tutorial](#contract-oriented-programming-tutorial)
 - [Advanced Solidity Tutorial](#advanced-solidity-tutorial)
 - [Solidity Inline Assembly Tutorial](#solidity-inline-assembly-tutorial)
 - [Blog Posts](#blog-posts)
@@ -14,6 +15,10 @@ This is a resource for Solidity and Ethereum smart-contract programming. Current
 ## Solidity Systems Tutorial
 
 [Solidity Systems I](https://github.com/androlo/solidity-workshop/blob/master/tutorials/2016-02-17-solidity-systems-I.md)
+
+## Contract-oriented Programming Tutorial
+
+[Contract-oriented Programming I](https://github.com/androlo/solidity-workshop/blob/master/tutorials/2016-06-30-contract-oriented-programming-I.md)
 
 ## Advanced Solidity Tutorial
 
