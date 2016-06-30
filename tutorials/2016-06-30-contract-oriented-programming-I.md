@@ -8,7 +8,7 @@ There is obviously more to it then this, and we will get into more specifics lat
 
 Contract interfaces is one of the hardest things to get right in Solidity. There are contracts, libraries, functions, modifiers and events. Functions have lots of modifiers that must be chosen correctly, and it's not always obvious what some of them (such as `external` and `internal`) actually does. Certain modifiers are not yet enforced (for example `constant`), and also - even if you get all the modifiers right there are more issues still, for example that certain Solidity types cannot be used as in- or out-data in certain types of functions.
 
-That being said, it is actually not too bad once you get used to it, and it keeps getting better all the time. The issues I mention here are not due to bad language design, but because certain features (whether they're language or EVM specific) just hasn't been added in yet.
+That being said, it is actually not that bad when you get used to it, and it keeps getting better all the time. The issues I mention here are not caused by bad language design, but because certain features (whether they're language or EVM specific) just hasn't been added in yet.
 
 Before getting into contract-oriented programming, I will go over basic function modifiers in Solidity.
 
