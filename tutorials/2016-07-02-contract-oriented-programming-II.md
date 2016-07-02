@@ -6,7 +6,7 @@ NOTE: Like in the first post, this is just a few examples of how to apply some s
 
 ### Post-conditions
 
-Post conditions can be used to ensure that certain things actually happened as a result of running a given function. Usually these things will be assertions about some state such as the caller balance, or a contract field. We do not limit the type of states may (or should) be checked here.
+Post conditions can be used to ensure that certain things actually happened as a result of running a given function. Usually these things will be assertions about some state, such as the caller balance, or a contract field. We do not limit the type of states may (or should) be checked here.
 
 A very simple example of a post-condition would be this:
 
@@ -70,7 +70,7 @@ When adding modifiers to a function, it is very important to get the ordering ri
 
 It can be hard to decide how to escape from a function if pre- or post-conditions are not met. Given how Solidity works at this point, it really boils down to whether you allow `return` in modifiers, or if they have to `throw`.
 
-Personally, I'm not sure what the best solution is. I'm leaning towards always throwing. This approach treats modifiers as traditional assertions, and if an assertion fails, that means we're guaranteed (in theory) that the code execution doesn't have unintended consequences. What I mean by "in theory" is that it is true as long as the modifiers are properly written and added to the functions in the correct way, and that execution is normal (i.e. no weird EVM exploits are used). This seems like the most contract-oriented way of doing things. The downside is that `throw` does not allow any form of recovery in calling functions, because there is no way to `catch`, but even if you could, there is still no error types, and like I point out in part 1 - it is also not possible to return error codes when using modifiers.
+Personally, I'm not sure what the best solution is. I'm leaning towards always throwing. This approach treats modifiers as traditional assertions, and if an assertion fails, that means we're guaranteed (in theory) that the code execution doesn't have unintended consequences. What I mean by "in theory" is that it is true as long as the modifiers are properly written and added to the functions in the correct way, and that execution is normal (i.e. no weird EVM exploits are used). This seems like the most contract-oriented way of doing things. The downside is that `throw` does not allow any form of recovery in calling functions, because there is no way to `catch`, but even if you could, there is still no error types, but like I point out in part 1 - it is also not possible to return error codes when using modifiers so this doesn't really matter at this point.
 
 ### Separating function logic from conditions
 
@@ -93,10 +93,9 @@ contract Token {
 
     // Transfer funds.
     // If the caller is blacklisted, this will fail.
-    // If the receiver is not blacklisted and the caller has
-    // the funds, they will be transferred to the receiver,
-    // otherwise the caller is blacklisted and their
-    // account emptied.
+    // If the receiver is not blacklisted and the caller has the funds, 
+    // they will be transferred to the receiver, otherwise the caller is blacklisted 
+    // and their account is emptied.
     function transfer(uint _amount, address _dest) {
         if (blacklisted[msg.sender])
             return;
@@ -123,7 +122,7 @@ Let's start by looking at the conditionals. We have the following three:
 
 3. `balance[msg.sender] >= _amount`
 
-Out of these, I would argue that `1` is the only pre-condition. It asserts that the caller is not blacklisted, and if they are, the rest of the body will not be run. The other two conditions should not be broken out, because they are part of the function's logic. It doesn't matter if one or both of them fail, because there is a well defined branch for each case.
+Out of these, I would argue that `1` is the only pre-condition. It asserts that the caller is not blacklisted, and if they are, the rest of the body will not be run. The other two conditions should not be broken out, because they are part of the function's logic. It doesn't matter if one or both of them fail; the function will still work as intended.
 
 What we have then is one pre-condition and no post-conditions. With modifiers it should look something like this:
 
@@ -150,10 +149,10 @@ contract Token {
     }
 
     // Transfer funds.
-    // If the caller is blacklisted, the transfer will fail.
-    // If the receiver is not blacklisted and the caller has
-    // the funds, they will be transferred to the receiver,
-    // otherwise the caller is blacklisted and their account emptied.
+    // If the caller is blacklisted, this will fail.
+    // If the receiver is not blacklisted and the caller has the funds, 
+    // they will be transferred to the receiver, otherwise the caller is blacklisted 
+    // and their account is emptied.
     function transfer(uint _amount, address _dest) not_blacklisted {
         if (!blacklisted[_dest] && balances[msg.sender] >= _amount) {
             balances[msg.sender] -= _amount;
@@ -221,7 +220,7 @@ contract Token {
 }
 ```
 
-This looks a lot neater, but we can do more. At this point, we've essentially broken out all of the transfer mechanics from the blacklisting mechanics, which means that we could remove the `at_least` pre-condition, as well as the actual transfer logic, and put those in a different function. It would be private, so that only the `transfer` function can access it. Also, to be extra neat, we can break out the blacklisting code as well.
+This looks a lot neater, but we can do more. We have actually separated the balance adjustment logic from the blacklisting logic, which means we can put that code in a different function, and add the `at_least` modifier to the new function instead. The balance adjustment function would be private, so that only the `transfer` function can access it. Also, to be extra neat, we can break out the blacklisting code as well (the code inside the `else` block).
 
 ```
 contract Token {
