@@ -8,6 +8,8 @@ Despite being fairly simple, Solidity is not an easy language to write code in. 
 
 That being said, it is actually not that bad when you get used to it, and it keeps getting better all the time. The issues I mention here are not caused by bad language design, but because certain features (whether they're language or EVM specific) simply hasn't been added in yet. The language is still young. Still, I feel that some of it must be cleared up before going into the contract part.
 
+Finally, these posts are made at a point where actual, formal contract-oriented programming is not the standard; it doesn't have full language support, and there is very little info and example code available. As such, there is a degree of exploration and experimentation in here, so be careful not to apply these techniques directly (correctly or not), and assume it will make the contracts 100% safe.
+
 ### Functions and standard modifiers
 
 Modifiers are added to variables and functions to affect their behavior. All the basic modifiers can be found [here](https://en.wikipedia.org/wiki/Design_by_contract). Most of the common modifiers (like public and private) is available, but some behave a bit differently then one might expect. 
