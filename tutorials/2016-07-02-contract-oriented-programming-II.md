@@ -144,7 +144,7 @@ contract Token {
     // msg.sender cannot be blacklisted
     modifier not_blacklisted {
         if (blacklisted[msg.sender])
-            return;
+            throw;
         _
     }
 
@@ -189,14 +189,14 @@ contract Token {
     // msg.sender cannot be blacklisted
     modifier not_blacklisted {
         if (blacklisted[msg.sender])
-            return;
+            throw;
         _
     }
 
     // msg.sender must have a balance of at least 'x' tokens.
     modifier at_least(uint x) {
         if (balances[msg.sender] < x)
-            return;
+            throw;
         _
     }
 
@@ -240,14 +240,14 @@ contract Token {
     // msg.sender cannot be blacklisted
     modifier not_blacklisted {
         if (blacklisted[msg.sender])
-            return;
+            throw;
         _
     }
 
     // msg.sender must have a balance of at least 'x' tokens.
     modifier at_least(uint x) {
         if (balances[msg.sender] < x)
-            return;
+            throw;
         _
     }
 
