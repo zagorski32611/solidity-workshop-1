@@ -245,8 +245,8 @@ This is the resulting contract. Very neat.
 
 ```
 
-contract COPToken
-{
+contract COPToken {
+
     address public owner;
 
     // The balance of everyone
