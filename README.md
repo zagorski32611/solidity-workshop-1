@@ -20,6 +20,8 @@ This is a resource for Solidity and Ethereum smart-contract programming. Current
 
 [Contract-oriented Programming I](https://github.com/androlo/solidity-workshop/blob/master/tutorials/2016-06-30-contract-oriented-programming-I.md)
 
+[Contract-oriented Programming II](https://github.com/androlo/solidity-workshop/blob/master/tutorials/2016-07-02-contract-oriented-programming-II.md)
+
 ## Advanced Solidity Tutorial
 
 [Advanced Solidity I - Introduction](https://github.com/androlo/solidity-workshop/blob/master/tutorials/2016-03-09-advanced-solidity-I.md)
