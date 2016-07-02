@@ -287,7 +287,7 @@ Also, notice that we have picked the interface apart. The `transfer` function no
 
 In these tutorials, there are two different types of contracts at work, and the differences between the two must be made clear.
 
-- The `contract` here - in terms of contract-oriented programming - is the definition of functionality, i.e. what a function does, and the conditions that must to be met in order for the function to carry out its work. It is informal, meaning there is no language support for it.
+- The `contract` here - in terms of contract-oriented programming - is the definition of functionality, i.e. what a function does, and the conditions that must to be met in order for the function to carry out its work. It is informal, meaning there is not full language support for it.
 
 - The balance criterion, in this case, is a pre-condition in the (informal) transactional contract definition.
 
@@ -297,7 +297,7 @@ In these tutorials, there are two different types of contracts at work, and the 
 
 - The `transfer` function is the entry point, but it defers some of the work to other functions.
 
-Note that the `contract` (in this context) is also not the JSON ABI of the smart-contract, and nor is it the JSON ABI of the `transfer` function, although it is part of the contract definition since it contains specifications for the input and output data, and some other things. There is no way to formally specify these type of contracts in Solidity. Most of the contract related validation work must be done manually, but it is still good to work like this because (like Gavin points out) it makes the code safer, and easier to validate and test.
+Note that the `contract` (in this context) is also not the JSON ABI of the smart-contract, and nor is it the JSON ABI of the `transfer` function, although the JSON ABI is part of the contract definition since it contains specifications for the input and output data, and some other things. There is no way to formally specify these type of contracts in Solidity. Most of the contract related validation work must be done manually, but it is still good to work like this because (like Gavin points out) it makes the code safer, and easier to validate and test.
 
 Finally, I will not unit test these contracts either. The example in part 1 is enough for now. I will probably add a part that focuses only on that when the basics has been sorted.
 
