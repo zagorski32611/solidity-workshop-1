@@ -198,13 +198,13 @@ contract Token
 The first thing we will do is to break out the guard from the `blacklist` function into a modifier and add that modifier to the function, giving us this:
 
 ```
-modifier isOwner {
+modifier is_owner {
     if (msg.sender != owner)
         return;
     _
 }
 
-function blacklist(address _addr) isOwner {
+function blacklist(address _addr) is_owner {
     blacklisted[_addr] = true;
 }
 ```
@@ -214,19 +214,19 @@ Note that the modifier doesn't need a `()` if it doesn't take any arguments.
 Fixing the transfer function is not very difficult. The same procedure as was used for `isOwner` can be used for both guards. The difference is we will add two modifiers to the function instead of one.
 
 ```
-modifier notBlacklisted {
+modifier not_blacklisted {
     if (blacklisted[msg.sender])
         return;
     _
 }
 
-modifier atLeast(uint x) {
+modifier at_least(uint x) {
     if (balances[msg.sender] < x)
         return;
     _
 }
 
-function transfer(uint _amount, address _dest) notBlacklisted atLeast(_amount) {
+function transfer(uint _amount, address _dest) not_blacklisted at_least(_amount) {
     balances[msg.sender] -= _amount;
     balances[_dest] += _amount;
 }
@@ -235,7 +235,7 @@ function transfer(uint _amount, address _dest) notBlacklisted atLeast(_amount) {
 Notice the order of the modifiers are left-to-right, so in order to have the exact same order the blacklist check must come first. Also, the balance check was changed slightly, although we could just as well have made it like this:
 
 ```
-modifier atLeast(uint x) {
+modifier at_least(uint x) {
     if (balances[msg.sender] >= x)
       _
 }
@@ -261,29 +261,29 @@ contract COPToken
         balances[msg.sender] = 1000000;
     }
 
-    modifier isOwner {
+    modifier is_owner {
         if (msg.sender != owner)
             return;
         _
     }
 
-    modifier notBlacklisted {
+    modifier not_blacklisted {
         if (blacklisted[msg.sender])
             return;
         _
     }
 
-    modifier atLeast(uint x) {
+    modifier at_least(uint x) {
         if (balances[msg.sender] < x)
             return;
         _
     }
 
-    function blacklist(address _addr) isOwner {
+    function blacklist(address _addr) is_owner {
         blacklisted[_addr] = true;
     }
 
-    function transfer(uint _amount, address _dest) notBlacklisted atLeast(_amount) {
+    function transfer(uint _amount, address _dest) not_blacklisted at_least(_amount) {
         balances[msg.sender] -= _amount;
         balances[_dest] += _amount;
     }
@@ -308,13 +308,13 @@ contract Token
         balances[msg.sender] = 1000000;
     }
 
-    modifier atLeast(uint x) {
+    modifier at_least(uint x) {
         if (balances[msg.sender] < x)
             return;
         _
     }
 
-    function transfer(uint _amount, address _dest) atLeast(_amount) {
+    function transfer(uint _amount, address _dest) at_least(_amount) {
         balances[msg.sender] -= _amount;
         balances[_dest] += _amount;
     }
@@ -326,7 +326,7 @@ contract TokenTest is Token {
 
     address constant EMPTY_ACCOUNT = 0xDEADBEA7;
 
-    function atLeastTester(uint _amount) atLeast(_amount) constant private returns (bool) {
+    function atLeastTester(uint _amount) at_least(_amount) constant private returns (bool) {
         return true;
     }
 
