@@ -1,6 +1,6 @@
 # Solidity workshop
 
-This is a resource for Solidity and Ethereum smart-contract programming. Currently under construction.
+This is a resource for Solidity and Ethereum smart-contract programming. Currently under construction. It's a side project with no deadlines, or any form of plan.
 
 ## Table of Content
 
