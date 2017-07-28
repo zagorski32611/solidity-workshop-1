@@ -134,17 +134,3 @@ This exploit shows that partially initialized contracts do exist, and they can b
 ### Summation
 
 Lots of hacking attempts and such are going on, so it is important to be on guard, and not make mistakes in the code. It should always be clear what the code does, and that contracts behaves like the creator intended. Knowing how to use constructors in a safe way is an important part of that.
-
-### Some extra advice
-
-Around Solidity stacks - never relax.
-
-### Some more advice
-
-Roses are red,
-
-violets are blue;
-
-there is always a coder,
-
-who is better then you.
