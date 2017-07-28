@@ -94,7 +94,7 @@ contract B {
 }
 ```
 
-This can be run in Remix, just copy the code, deploy `A`, copy its address, then deploy `B` and pass the address of `A` (inside double quotes) as the constructor parameter. When that is done, calling the `caller` function on `A` will return the address to `B`. This means that `B` must have had a reference to the contract account of `A` during the execution of `f`, which takes place while `A` is still being initialized - which means it had no runtime code in the account at that time. This means that certain security features provided by Solidity would not have been in effect.
+This can be run in Remix, just copy the code, deploy `A`, copy its address, then deploy `B` and pass the address of `A` (inside double quotes) as the constructor parameter. When that is done, calling the `caller` function on `A` will return the address to `B`. This means that `B` must have had a reference to the contract account of `A` during the execution of `f`, which takes place while `A` is still being initialized - which means it had no runtime code in the account at that time. This in turn means that certain security features provided by Solidity would not have been in effect.
 
 Let's exploit this in a fairly benign way by sending some ether to a non `payable` contract:
 
