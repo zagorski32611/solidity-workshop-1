@@ -127,10 +127,10 @@ contract B {
 }
 ```
 
-Running this in Remix works the exact same way, except after deploying `A`, call the fallback function with some value added to the "value" field near the top of the tab (where you choose your address and environment etc.), then copy the address and deploy `B` like it was done before. Note that when you run `money` on `B` after this, it will have 1 wei, even though it is not `payable`. `payable` works by reverting when the `CALLVALUE` (ie amount of ether transferred) is not zero, unless a payable fallback function is in place, and that code had not yet been added.
+Running this in Remix works the exact same way, except after deploying `A`, call the fallback function with some value added to the "value" field near the top of the tab (where you choose your address and environment etc.), then copy the address and deploy `B` like it was done before. Note that when you run `money` on `B` after this, it will have 1 wei, even though it is not `payable`. `payable` works by reverting when the `CALLVALUE` (ie amount of ether transferred) is not zero, unless a payable fallback function is in place, and that code has not yet been added.
 
 This exploit shows that partially initialized contracts do exist, and they can be addressed by other contracts if not careful, but it is not very harmful; what it could do is perhaps to mess up some invariants of contracts that are `payable` but has code that depends on knowing about all the Ether going in and out. The real problems happens when instructions like `CALLCODE` and `DELEGATECALL` are used during initialization, because the code they bring in operates on the contract account directly.
 
 ### Summation
 
-Lots of hacking attempts and such are going on, so it is important to be on guard, and not make mistakes in the code. It should always be clear what the code does, and that contracts behaves like the creator intended. Knowing how to use constructors in a safe way is an important part of that.
+Lots of hacking attempts are going on, and some of them has been successful, so it is important to be on guard and not make mistakes in the code. It should always be clear what the code does, and that contracts behaves like the creator intended. Knowing how to use constructors in a safe way is an important part of that.
