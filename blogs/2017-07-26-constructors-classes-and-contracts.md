@@ -102,6 +102,11 @@ Let's exploit this in a fairly benign way by sending some ether to a non `payabl
 pragma solidity ^0.4.13;
 
 contract A {
+
+    function A() payable {
+        
+    }
+
     function f() { 
         msg.sender.transfer(1);
     }
