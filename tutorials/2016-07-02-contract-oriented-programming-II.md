@@ -1,6 +1,6 @@
 # Contract-oriented programming - part II
 
-This is the second part of the contract-oriented programming tutorial. Here we're going to look at post-conditions, and a few functions that are more complex then the ones in the previous post.
+This is the second part of the contract-oriented programming tutorial. Here we're going to look at post-conditions, and a few functions that are more complex than the ones in the previous post.
 
 NOTE: Like in the first post, this is just a few examples of how to apply some simple contract-oriented techniques in Solidity using custom modifiers. We will get into more nuances in later posts. This is mostly for experimentation and exploring.
 
@@ -74,7 +74,7 @@ Personally, I'm not sure what the best solution is. I'm leaning towards always t
 
 ### Separating function logic from conditions
 
-Sometimes it can be hard to know whether a conditional should be put inside a modifier (as a pre- or post-condition), or be part of the function body itself. Here is a contract with a function that is a bit trickier then the ones in part 1:
+Sometimes it can be hard to know whether a conditional should be put inside a modifier (as a pre- or post-condition), or be part of the function body itself. Here is a contract with a function that is a bit trickier than the ones in part 1:
 
 ```
 contract Token {
